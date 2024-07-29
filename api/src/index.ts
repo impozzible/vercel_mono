@@ -50,14 +50,13 @@ app.use(
     },
   })
 );
-
 app.use((req, res, next) => {
   res.contentType("application/json; charset=utf-8");
   next();
 });
-app.use(nocache());
 
-app.use(cors());
+app.use(nocache());
+app.use(cors())
 
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
@@ -65,9 +64,5 @@ apiRouter.use("/oauth", oauthRouter);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
-
-// app.listen(PORT, () => {
-//   console.log(`Listening on port ${PORT}`);
-// });
 
 export default app;

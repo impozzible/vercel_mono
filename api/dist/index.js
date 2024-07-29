@@ -48,24 +48,7 @@ else {
     console.log(`VERCEL_ENV is set to: ${process.env.VERCEL_ENV}`);
 }
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 6060; // Default to 6060 if PORT is not set
-let CLIENT_ORIGIN_URL;
-if (process.env.VERCEL_ENV === 'production') {
-    throw new Error("Production environment not yet supported");
-}
-else if (process.env.VERCEL_ENV === 'preview') {
-    if (!process.env.PREVIEW_URL_FRONTEND) {
-        throw new Error("PREVIEW_URL_FRONTEND is required in preview environment");
-    }
-    CLIENT_ORIGIN_URL = process.env.PREVIEW_URL_FRONTEND;
-}
-else {
-    // Development environment (including when VERCEL_ENV is not set)
-    if (!process.env.DEVELOPMENT_URL_FRONTEND) {
-        throw new Error("DEVELOPMENT_URL_FRONTEND is required in development environment");
-    }
-    CLIENT_ORIGIN_URL = process.env.DEVELOPMENT_URL_FRONTEND;
-}
-console.log(`CLIENT_ORIGIN_URL is set to: ${CLIENT_ORIGIN_URL}`);
+console.log(`PORT is set to: ${PORT}`);
 const app = (0, express_1.default)();
 const apiRouter = express_1.default.Router();
 app.use(express_1.default.json());
@@ -90,24 +73,10 @@ app.use((req, res, next) => {
     next();
 });
 app.use((0, nocache_1.default)());
-if (process.env.VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'preview') {
-    app.use((0, cors_1.default)({ origin: true }));
-    console.log('CORS set to maximally permissive for development or preview environment');
-}
-else {
-    app.use((0, cors_1.default)({
-        origin: CLIENT_ORIGIN_URL,
-        methods: ["GET"],
-        allowedHeaders: ["Authorization", "Content-Type"],
-        maxAge: 86400,
-    }));
-}
+app.use((0, cors_1.default)());
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messages_router_1.messagesRouter);
 apiRouter.use("/oauth", oauth_router_1.oauthRouter);
 app.use(error_middleware_1.errorHandler);
 app.use(not_found_middleware_1.notFoundHandler);
-// app.listen(PORT, () => {
-//   console.log(`Listening on port ${PORT}`);
-// });
 exports.default = app;
