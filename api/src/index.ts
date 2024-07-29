@@ -10,10 +10,7 @@ import { oauthRouter } from "./oauth/oauth.router";
 import { errorHandler } from "./middleware/error.middleware";
 import { notFoundHandler } from "./middleware/not-found.middleware";
 
-if (!(
-  process.env.PORT &&
-  process.env.CLIENT_ORIGIN_URL &&
-  process.env.AUTH0_DOMAIN)) {
+if (!(process.env.PORT && process.env.AUTH0_DOMAIN)) {
   throw new Error(
     "Missing required environment variables. Check docs for more info."
   );
@@ -26,7 +23,24 @@ if (!process.env.VERCEL_ENV) {
 }
 
 const PORT = parseInt(process.env.PORT, 10);
-const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
+let CLIENT_ORIGIN_URL: string;
+
+if (process.env.VERCEL_ENV === 'production') {
+  throw new Error("Production environment not yet supported");
+} else if (process.env.VERCEL_ENV === 'preview') {
+  if (!process.env.PREVIEW_URL_FRONTEND) {
+    throw new Error("PREVIEW_URL_FRONTEND is required in preview environment");
+  }
+  CLIENT_ORIGIN_URL = process.env.PREVIEW_URL_FRONTEND;
+} else {
+  // Development environment (including when VERCEL_ENV is not set)
+  if (!process.env.DEVELOPMENT_URL_FRONTEND) {
+    throw new Error("DEVELOPMENT_URL_FRONTEND is required in development environment");
+  }
+  CLIENT_ORIGIN_URL = process.env.DEVELOPMENT_URL_FRONTEND;
+}
+
+console.log(`CLIENT_ORIGIN_URL is set to: ${CLIENT_ORIGIN_URL}`);
 
 const app = express();
 const apiRouter = express.Router();
