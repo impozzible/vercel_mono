@@ -24,24 +24,8 @@ if (!process.env.VERCEL_ENV) {
 }
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 6060; // Default to 6060 if PORT is not set
-let CLIENT_ORIGIN_URL: string;
 
-if (process.env.VERCEL_ENV === 'production') {
-  throw new Error("Production environment not yet supported");
-} else if (process.env.VERCEL_ENV === 'preview') {
-  if (!process.env.PREVIEW_URL_FRONTEND) {
-    throw new Error("PREVIEW_URL_FRONTEND is required in preview environment");
-  }
-  CLIENT_ORIGIN_URL = process.env.PREVIEW_URL_FRONTEND;
-} else {
-  // Development environment (including when VERCEL_ENV is not set)
-  if (!process.env.DEVELOPMENT_URL_FRONTEND) {
-    throw new Error("DEVELOPMENT_URL_FRONTEND is required in development environment");
-  }
-  CLIENT_ORIGIN_URL = process.env.DEVELOPMENT_URL_FRONTEND;
-}
-
-console.log(`CLIENT_ORIGIN_URL is set to: ${CLIENT_ORIGIN_URL}`);
+console.log(`PORT is set to: ${PORT}`);
 
 const app = express();
 const apiRouter = express.Router();
@@ -73,19 +57,17 @@ app.use((req, res, next) => {
 });
 app.use(nocache());
 
-if (process.env.VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'preview') {
-  app.use(cors({ origin: true }));
-  console.log('CORS set to maximally permissive for development or preview environment');
-} else {
-  app.use(
-    cors({
-      origin: CLIENT_ORIGIN_URL,
-      methods: ["GET"],
-      allowedHeaders: ["Authorization", "Content-Type"],
-      maxAge: 86400,
-    })
-  );
-}
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow any origin
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  next();
+});
 
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
@@ -98,4 +80,4 @@ app.use(notFoundHandler);
 //   console.log(`Listening on port ${PORT}`);
 // });
 
-export default app
+export default app;
