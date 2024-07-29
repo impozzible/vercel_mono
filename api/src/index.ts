@@ -10,10 +10,14 @@ import { oauthRouter } from "./oauth/oauth.router";
 import { errorHandler } from "./middleware/error.middleware";
 import { notFoundHandler } from "./middleware/not-found.middleware";
 
-if (!(process.env.PORT && process.env.AUTH0_DOMAIN)) {
-  throw new Error(
-    "Missing required environment variables. Check docs for more info."
-  );
+const requiredEnvVars = ['PORT', 'AUTH0_DOMAIN'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  missingEnvVars.forEach(varName => {
+    console.error(`Missing required environment variable: ${varName}`);
+  });
+  throw new Error("Missing required environment variables. Check logs for details.");
 }
 
 if (!process.env.VERCEL_ENV) {
