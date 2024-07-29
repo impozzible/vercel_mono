@@ -73,14 +73,19 @@ app.use((req, res, next) => {
 });
 app.use(nocache());
 
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN_URL,
-    methods: ["GET"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-    maxAge: 86400,
-  })
-);
+if (process.env.VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'preview') {
+  app.use(cors());
+  console.log('CORS set to maximally permissive for development or preview environment');
+} else {
+  app.use(
+    cors({
+      origin: CLIENT_ORIGIN_URL,
+      methods: ["GET"],
+      allowedHeaders: ["Authorization", "Content-Type"],
+      maxAge: 86400,
+    })
+  );
+}
 
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
