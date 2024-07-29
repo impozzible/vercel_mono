@@ -36,13 +36,36 @@ const messages_router_1 = require("./messages/messages.router");
 const oauth_router_1 = require("./oauth/oauth.router");
 const error_middleware_1 = require("./middleware/error.middleware");
 const not_found_middleware_1 = require("./middleware/not-found.middleware");
-if (!(process.env.PORT &&
-    process.env.CLIENT_ORIGIN_URL &&
-    process.env.AUTH0_DOMAIN)) {
-    throw new Error("Missing required environment variables. Check docs for more info.");
+const requiredEnvVars = ['PORT', 'AUTH0_DOMAIN'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingEnvVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
 }
-const PORT = parseInt(process.env.PORT, 10);
-const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL;
+if (!process.env.VERCEL_ENV) {
+    console.log("VERCEL_ENV is not present. If you are developing locally without using vercel dev, you may need to define it explicitly in .env.local (remember it is overridden when vercel env pull is run)");
+}
+else {
+    console.log(`VERCEL_ENV is set to: ${process.env.VERCEL_ENV}`);
+}
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 6060; // Default to 6060 if PORT is not set
+let CLIENT_ORIGIN_URL;
+if (process.env.VERCEL_ENV === 'production') {
+    throw new Error("Production environment not yet supported");
+}
+else if (process.env.VERCEL_ENV === 'preview') {
+    if (!process.env.PREVIEW_URL_FRONTEND) {
+        throw new Error("PREVIEW_URL_FRONTEND is required in preview environment");
+    }
+    CLIENT_ORIGIN_URL = process.env.PREVIEW_URL_FRONTEND;
+}
+else {
+    // Development environment (including when VERCEL_ENV is not set)
+    if (!process.env.DEVELOPMENT_URL_FRONTEND) {
+        throw new Error("DEVELOPMENT_URL_FRONTEND is required in development environment");
+    }
+    CLIENT_ORIGIN_URL = process.env.DEVELOPMENT_URL_FRONTEND;
+}
+console.log(`CLIENT_ORIGIN_URL is set to: ${CLIENT_ORIGIN_URL}`);
 const app = (0, express_1.default)();
 const apiRouter = express_1.default.Router();
 app.use(express_1.default.json());
@@ -67,12 +90,18 @@ app.use((req, res, next) => {
     next();
 });
 app.use((0, nocache_1.default)());
-app.use((0, cors_1.default)({
-    origin: CLIENT_ORIGIN_URL,
-    methods: ["GET"],
-    allowedHeaders: ["Authorization", "Content-Type"],
-    maxAge: 86400,
-}));
+if (process.env.VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'preview') {
+    app.use((0, cors_1.default)({ origin: true }));
+    console.log('CORS set to maximally permissive for development or preview environment');
+}
+else {
+    app.use((0, cors_1.default)({
+        origin: CLIENT_ORIGIN_URL,
+        methods: ["GET"],
+        allowedHeaders: ["Authorization", "Content-Type"],
+        maxAge: 86400,
+    }));
+}
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messages_router_1.messagesRouter);
 apiRouter.use("/oauth", oauth_router_1.oauthRouter);

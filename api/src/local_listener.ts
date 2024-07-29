@@ -6,7 +6,7 @@ if (!(
   process.env.PORT
 )) {
   throw new Error(
-    "Missing required environment variables. Check docs for more info."
+    "Missing PORT environment variable."
   );
 }
 

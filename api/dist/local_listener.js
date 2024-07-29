@@ -29,10 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
 const index_1 = __importDefault(require("./index"));
 dotenv.config();
-if (!(process.env.PORT &&
-    process.env.CLIENT_ORIGIN_URL &&
-    process.env.AUTH0_DOMAIN)) {
-    throw new Error("Missing required environment variables. Check docs for more info.");
+if (!(process.env.PORT)) {
+    throw new Error("Missing PORT environment variable.");
 }
 const PORT = parseInt(process.env.PORT, 10);
 index_1.default.listen(PORT, () => {

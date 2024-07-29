@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 app.use(nocache());
 
 if (process.env.VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'preview') {
-  app.use(cors());
+  app.use(cors({ origin: true }));
   console.log('CORS set to maximally permissive for development or preview environment');
 } else {
   app.use(
