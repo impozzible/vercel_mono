@@ -14,10 +14,7 @@ const requiredEnvVars = ['PORT', 'AUTH0_DOMAIN'];
 const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingEnvVars.length > 0) {
-  missingEnvVars.forEach(varName => {
-    console.error(`Missing required environment variable: ${varName}`);
-  });
-  throw new Error("Missing required environment variables. Check logs for details.");
+  throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
 }
 
 if (!process.env.VERCEL_ENV) {
