@@ -1,0 +1,17 @@
+{
+  "name": "walkit",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "api"
+  ],
+  "scripts": {
+    "build:api": "yarn workspace api build",
+    "start:api": "yarn workspace api start",
+    "dev:api": "yarn workspace api dev",
+    "build:frontend": "yarn workspace frontend build",
+    "start:frontend": "yarn workspace frontend start",
+    "dev:frontend": "yarn workspace frontend dev"
+  }
+}

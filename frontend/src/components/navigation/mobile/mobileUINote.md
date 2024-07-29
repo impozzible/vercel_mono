@@ -1,0 +1,1 @@
+Mobile UI is not implemented in this prototype, so far. A page layout component is still in use to make it easier to incorporate a mobile nav UI later if required.

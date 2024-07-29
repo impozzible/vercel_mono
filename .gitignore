@@ -1,0 +1,11 @@
+# Environment files
+.env.local
+
+# Dependencies
+node_modules
+
+# Aider files
+.aider*
+!.aider.conf.yml
+!.aiderignore*.aider
+

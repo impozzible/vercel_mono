@@ -1,0 +1,9 @@
+# Environment files
+.env*
+!.env.template
+!.env.local.template
+
+# Dependencies
+node_modules
+.vercel
+.env*.local
