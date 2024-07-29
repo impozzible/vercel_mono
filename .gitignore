@@ -9,3 +9,4 @@ node_modules
 !.aider.conf.yml
 !.aiderignore*.aider
 
+.env*.local

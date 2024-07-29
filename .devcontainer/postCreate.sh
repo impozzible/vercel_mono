@@ -15,7 +15,9 @@ fi
 pip install aider-chat
 
 # Install project dependencies with Yarn
-yarn global add vercel
+npm install -g nodemon
+npm install -g vercel
+
 yarn install
 
 echo "Post-create script has been executed."

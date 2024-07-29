@@ -2,5 +2,5 @@
   "watch": ["src", ".env.local"],
   "ext": "ts,env",
   "ignore": ["src/**/*.spec.ts"],
-  "exec": "ts-node ./src/index.ts"
+  "exec": "ts-node ./src/local_listener.ts"
 }
