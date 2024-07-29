@@ -26,7 +26,7 @@ if (!process.env.VERCEL_ENV) {
   console.log(`VERCEL_ENV is set to: ${process.env.VERCEL_ENV}`);
 }
 
-const PORT = parseInt(process.env.PORT, 10);
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000; // Default to 3000 if PORT is not set
 let CLIENT_ORIGIN_URL: string;
 
 if (process.env.VERCEL_ENV === 'production') {
