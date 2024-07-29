@@ -10,3 +10,4 @@ node_modules
 !.aiderignore*.aider
 
 .env*.local
+*.aider

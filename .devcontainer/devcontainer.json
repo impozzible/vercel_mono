@@ -1,9 +1,10 @@
 {
-  "name": "Ubuntu Jammy with TypeScript, Node, Yarn, and Vercel",
+  "name": "Ubuntu Jammy with TypeScript, Node, Yarn, python, and Vercel",
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers-contrib/features/typescript:2": {}
+    "ghcr.io/devcontainers-contrib/features/typescript:2": {},
+    "ghcr.io/devcontainers/features/python:1": {}
   },
   "postCreateCommand": "chmod +x .devcontainer/postCreate.sh && .devcontainer/postCreate.sh",
   "customizations": {
