@@ -1,6 +1,6 @@
 {
-  "watch": ["src", ".env.local"],
+  "watch": ["api", ".env.local"],
   "ext": "ts,env",
-  "ignore": ["src/**/*.spec.ts"],
-  "exec": "tsc && ts-node ./src/local_listener.ts"
+  "ignore": ["api/**/*.spec.ts"],
+  "exec": "tsc && ts-node ./api/local_listener.ts"
 }

@@ -10,7 +10,7 @@
     {
       "id": "prj_EeCVHszD8f5Vaio7pieXKStm4911",
       "name": "vercel-mono-api",
-      "directory": "api/dist"
+      "directory": "api"
     }
   ]
 }

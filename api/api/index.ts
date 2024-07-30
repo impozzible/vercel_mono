@@ -56,7 +56,19 @@ app.use((req, res, next) => {
 });
 
 app.use(nocache());
-app.use(cors())
+
+// Maximally permissive CORS configuration
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: '*',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests without requiring authentication
+app.options('*', cors(corsOptions));
 
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
@@ -64,5 +76,9 @@ apiRouter.use("/oauth", oauthRouter);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 export default app;

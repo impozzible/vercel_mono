@@ -4,8 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon"
+    "start": "tsc && node dist/index.js"
   },
   "dependencies": {
     "axios": "^1.7.2",
